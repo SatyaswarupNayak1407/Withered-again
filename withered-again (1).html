@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WITHERED AGAIN — A Napping Nightmare Production</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IM+Fell+English:ital@0;1&family=Courier+Prime:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#050404;
+  --deep:#0a0808;
+  --ink:#110e0e;
+  --ash:#1a1515;
+  --fog:#251f1f;
+  --bone:#b8a99a;
+  --pale:#d4c8bc;
+  --ghost:#ede5da;
+  --blood:#6b1515;
+  --crimson:#8b1a1a;
+  --red-glow:rgba(139,26,26,0.45);
+}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{
+  background:var(--black);
+  color:var(--bone);
+  font-family:'Cormorant Garamond',Georgia,serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* === GRAIN OVERLAY === */
+#grain{
+  position:fixed;inset:0;
+  pointer-events:none;
+  z-index:9500;
+  opacity:0.55;
+  background-repeat:repeat;
+  background-size:200px 200px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+/* === CURSOR === */
+#cur{
+  position:fixed;
+  width:10px;height:10px;
+  background:var(--pale);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9999;
+  left:-20px;top:-20px;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:difference;
+  transition:transform 0.1s;
+}
+#cur2{
+  position:fixed;
+  width:38px;height:38px;
+  border:1px solid rgba(184,169,154,0.3);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  left:-20px;top:-20px;
+  transform:translate(-50%,-50%);
+}
+#cur.big{transform:translate(-50%,-50%) scale(2);}
+#cur2.big{width:60px;height:60px;}
+
+/* === NAV === */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:1.8rem 5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom,rgba(5,4,4,0.97),transparent);
+}
+.nav-logo{
+  font-family:'IM Fell English',serif;
+  font-size:0.85rem;letter-spacing:0.28em;
+  color:var(--bone);opacity:0.7;text-transform:uppercase;
+}
+.nav-links{display:flex;gap:3rem;list-style:none;}
+.nav-links a{
+  font-family:'Courier Prime',monospace;
+  font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--bone);opacity:0.5;text-decoration:none;
+  transition:opacity 0.3s;
+}
+.nav-links a:hover{opacity:1;}
+
+/* === HERO === */
+#hero{
+  position:relative;width:100%;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#hero-canvas{
+  position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block;
+}
+.hero-content{
+  position:relative;z-index:10;
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.4rem;
+  pointer-events:none;
+}
+.hero-warning{
+  font-family:'Courier Prime',monospace;
+  font-size:0.65rem;letter-spacing:0.32em;text-transform:uppercase;
+  color:var(--crimson);
+  border:1px solid rgba(139,26,26,0.45);
+  padding:0.45rem 1.4rem;
+  animation:pulse-warn 3s ease-in-out infinite;
+}
+@keyframes pulse-warn{
+  0%,100%{opacity:0.55;}50%{opacity:1;}
+}
+.hero-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(3.2rem,8.5vw,8rem);
+  font-weight:700;
+  line-height:0.9;
+  color:var(--ghost);
+  letter-spacing:0.04em;
+  text-shadow:
+    0 0 60px rgba(139,26,26,0.7),
+    0 0 120px rgba(139,26,26,0.3),
+    0 3px 8px rgba(0,0,0,0.95);
+  animation:flicker 9s ease-in-out infinite;
+}
+@keyframes flicker{
+  0%,87%,100%{opacity:1;}
+  88%{opacity:0.8;}
+  89%{opacity:1;}
+  90%{opacity:0.6;}
+  91%{opacity:1;}
+  92%{opacity:0.88;}
+  93%{opacity:0.55;}
+  94%{opacity:1;}
+}
+.hero-subtitle{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:clamp(0.85rem,1.8vw,1.2rem);
+  color:var(--bone);opacity:0.55;letter-spacing:0.18em;
+}
+.hero-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1rem,2vw,1.45rem);
+  font-weight:300;font-style:italic;
+  color:var(--pale);
+  max-width:500px;line-height:1.75;opacity:0.88;
+}
+.hero-cta{display:flex;gap:1.5rem;align-items:center;margin-top:1rem;pointer-events:all;}
+
+.btn-buy-hero{
+  font-family:'Courier Prime',monospace;
+  font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--black);background:var(--bone);
+  border:none;padding:1rem 2.8rem;
+  text-decoration:none;display:inline-block;
+  position:relative;overflow:hidden;
+  transition:color 0.35s;cursor:none;
+}
+.btn-buy-hero::before{
+  content:'';position:absolute;inset:0;
+  background:var(--crimson);
+  transform:translateX(-101%);
+  transition:transform 0.45s cubic-bezier(0.77,0,0.18,1);
+}
+.btn-buy-hero:hover{color:var(--ghost);}
+.btn-buy-hero:hover::before{transform:translateX(0);}
+.btn-buy-hero span{position:relative;z-index:1;}
+
+.btn-ghost{
+  font-family:'Courier Prime',monospace;
+  font-size:0.8rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--bone);opacity:0.6;
+  background:transparent;
+  border:1px solid rgba(184,169,154,0.28);
+  padding:1rem 2rem;
+  text-decoration:none;display:inline-block;
+  transition:opacity 0.3s,border-color 0.3s;cursor:none;
+}
+.btn-ghost:hover{opacity:1;border-color:rgba(184,169,154,0.65);}
+
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  z-index:10;display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  opacity:0.38;font-family:'Courier Prime',monospace;
+  font-size:0.58rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--bone);
+  animation:bob 2.8s ease-in-out infinite;
+}
+@keyframes bob{
+  0%,100%{transform:translateX(-50%) translateY(0);}
+  50%{transform:translateX(-50%) translateY(7px);}
+}
+.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--bone),transparent);}
+
+/* === SECTIONS === */
+section{position:relative;padding:8rem 6rem;overflow:hidden;}
+.rule{width:55px;height:1px;background:linear-gradient(to right,var(--crimson),transparent);margin-bottom:1.4rem;}
+.eyebrow{
+  font-family:'Courier Prime',monospace;
+  font-size:0.63rem;letter-spacing:0.38em;text-transform:uppercase;
+  color:var(--crimson);margin-bottom:0.85rem;
+}
+.section-h{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.7rem,3.8vw,3rem);
+  color:var(--ghost);font-weight:400;line-height:1.1;margin-bottom:1.5rem;
+}
+
+/* === STORY === */
+#story{
+  background:var(--deep);
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+}
+.story-text p{
+  font-size:1.12rem;font-weight:300;line-height:1.95;
+  color:var(--pale);opacity:0.88;margin-bottom:1.1rem;
+}
+.story-text p em{color:var(--ghost);font-style:italic;}
+.blockquote{
+  border-left:2px solid var(--crimson);
+  padding:1.4rem 2rem;margin:2rem 0;
+  background:rgba(107,21,21,0.07);
+}
+.blockquote p{
+  font-family:'IM Fell English',serif;
+  font-style:italic;font-size:1.28rem;line-height:1.65;color:var(--ghost);
+}
+.blockquote cite{
+  display:block;margin-top:0.75rem;
+  font-family:'Courier Prime',monospace;
+  font-size:0.62rem;letter-spacing:0.22em;color:var(--crimson);text-transform:uppercase;
+}
+#face-wrap{position:relative;height:540px;}
+#face-canvas{width:100%;height:100%;display:block;}
+.face-vig{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 38%,var(--deep) 80%);
+  pointer-events:none;
+}
+
+/* === CONTENT WARNING === */
+#warning{
+  background:var(--ink);text-align:center;
+  padding:5rem 6rem;
+  border-top:1px solid rgba(107,21,21,0.35);
+  border-bottom:1px solid rgba(107,21,21,0.35);
+}
+#warning .section-h{color:var(--crimson);}
+.warn-body{
+  font-size:1rem;font-weight:300;line-height:1.85;
+  color:var(--bone);opacity:0.58;
+  max-width:480px;margin:0 auto 2rem;
+}
+.warn-tags{display:flex;flex-wrap:wrap;gap:0.9rem;justify-content:center;margin-top:1.5rem;}
+.warn-tag{
+  font-family:'Courier Prime',monospace;
+  font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;
+  border:1px solid rgba(139,26,26,0.48);
+  color:var(--crimson);padding:0.5rem 1.15rem;
+  background:rgba(107,21,21,0.07);
+}
+
+/* === FEATURES === */
+#features{background:var(--black);}
+.feat-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;margin-top:3.5rem;
+}
+.feat-card{
+  background:var(--ash);padding:2.6rem 2rem;
+  position:relative;overflow:hidden;
+  transition:background 0.4s;
+}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,var(--crimson),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.5s cubic-bezier(0.77,0,0.18,1);
+}
+.feat-card:hover{background:var(--fog);}
+.feat-card:hover::before{transform:scaleX(1);}
+.feat-num{
+  font-family:'Cinzel Decorative',serif;
+  font-size:2.8rem;color:rgba(139,26,26,0.14);
+  line-height:1;margin-bottom:0.9rem;
+  transition:color 0.4s;
+}
+.feat-card:hover .feat-num{color:rgba(139,26,26,0.38);}
+.feat-title{
+  font-family:'IM Fell English',serif;
+  font-size:1.15rem;color:var(--ghost);margin-bottom:0.7rem;
+}
+.feat-desc{
+  font-size:0.92rem;font-weight:300;line-height:1.82;
+  color:var(--bone);opacity:0.68;
+}
+
+/* === CHARACTERS === */
+#characters{background:var(--deep);border-top:1px solid rgba(184,169,154,0.06);}
+.char-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1.4rem;margin-top:3rem;
+}
+.char-card{
+  border:1px solid rgba(184,169,154,0.09);
+  padding:2rem 1.4rem;
+  transition:border-color 0.4s,background 0.4s;cursor:none;
+}
+.char-card:hover{
+  border-color:rgba(139,26,26,0.45);
+  background:rgba(107,21,21,0.06);
+}
+.char-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:0.88rem;color:var(--ghost);
+  margin-bottom:0.35rem;letter-spacing:0.04em;
+}
+.char-role{
+  font-family:'Courier Prime',monospace;
+  font-size:0.6rem;letter-spacing:0.22em;color:var(--crimson);
+  text-transform:uppercase;margin-bottom:1rem;
+}
+.char-line{height:1px;background:linear-gradient(to right,var(--crimson),transparent);margin:0.9rem 0;width:38px;}
+.char-desc{font-size:0.9rem;font-weight:300;line-height:1.78;color:var(--bone);opacity:0.62;font-style:italic;}
+
+/* === ACTS === */
+#acts{background:var(--black);}
+.acts-wrap{max-width:760px;margin:0 auto;}
+.timeline{position:relative;margin-top:3.5rem;padding-left:3rem;}
+.timeline::before{
+  content:'';position:absolute;
+  left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,var(--crimson),rgba(107,21,21,0.1) 90%,transparent);
+}
+.act{
+  position:relative;margin-bottom:2.8rem;padding-bottom:2.8rem;
+  border-bottom:1px solid rgba(184,169,154,0.05);
+  opacity:0;transform:translateX(-24px);
+  transition:opacity 0.75s ease,transform 0.75s ease;
+}
+.act.show{opacity:1;transform:translateX(0);}
+.act::before{
+  content:'';position:absolute;
+  left:-3.25rem;top:0.35rem;
+  width:10px;height:10px;
+  background:var(--crimson);border-radius:50%;
+  box-shadow:0 0 14px var(--red-glow);
+}
+.act-num{
+  font-family:'Courier Prime',monospace;
+  font-size:0.6rem;letter-spacing:0.32em;color:var(--crimson);
+  text-transform:uppercase;margin-bottom:0.4rem;
+}
+.act-title{
+  font-family:'IM Fell English',serif;
+  font-size:1.38rem;color:var(--ghost);margin-bottom:0.7rem;
+}
+.act-desc{
+  font-size:0.98rem;font-weight:300;line-height:1.88;
+  color:var(--bone);opacity:0.7;max-width:590px;
+}
+.act-quote{
+  margin-top:0.9rem;
+  font-family:'IM Fell English',serif;font-style:italic;
+  font-size:0.93rem;color:var(--pale);opacity:0.58;
+}
+
+/* === ENDINGS === */
+#endings{
+  display:grid;grid-template-columns:1fr 1fr;
+  padding:0;background:var(--ink);
+}
+.end-card{padding:6rem 4.5rem;position:relative;}
+.end-bad{background:rgba(107,21,21,0.1);border-right:1px solid rgba(107,21,21,0.22);}
+.end-good{background:rgba(14,10,10,0.7);}
+.end-label{
+  font-family:'Courier Prime',monospace;
+  font-size:0.63rem;letter-spacing:0.38em;text-transform:uppercase;margin-bottom:1.4rem;
+}
+.end-bad .end-label{color:var(--crimson);}
+.end-good .end-label{color:rgba(184,169,154,0.45);}
+.end-title{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.4rem,2.8vw,2.1rem);
+  margin-bottom:1.4rem;line-height:1.1;
+}
+.end-bad .end-title{color:var(--crimson);}
+.end-good .end-title{color:var(--pale);}
+.end-text{
+  font-size:0.98rem;font-weight:300;line-height:1.92;
+  color:var(--bone);opacity:0.68;margin-bottom:1.4rem;
+}
+.end-final{
+  font-family:'IM Fell English',serif;font-style:italic;
+  font-size:1.02rem;color:var(--pale);opacity:0.82;
+}
+
+/* === BUY === */
+#buy{
+  background:var(--black);text-align:center;
+  padding:9rem 5rem;position:relative;overflow:hidden;
+}
+#buy-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block;}
+.buy-inner{position:relative;z-index:10;}
+.buy-price{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(4rem,10vw,9rem);
+  color:var(--ghost);line-height:1;margin:1.4rem 0;
+  text-shadow:0 0 80px rgba(139,26,26,0.55),0 0 200px rgba(139,26,26,0.2);
+}
+.buy-note{
+  font-family:'Courier Prime',monospace;
+  font-size:0.68rem;letter-spacing:0.26em;text-transform:uppercase;
+  color:var(--bone);opacity:0.38;margin-bottom:0.5rem;
+}
+.buy-btns{
+  display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;
+}
+.btn-crim{
+  font-family:'Courier Prime',monospace;
+  font-size:0.82rem;letter-spacing:0.26em;text-transform:uppercase;
+  color:var(--ghost);background:var(--crimson);
+  border:none;padding:1.15rem 3.5rem;
+  text-decoration:none;display:inline-block;cursor:none;
+  transition:background 0.35s,box-shadow 0.35s;
+  box-shadow:0 0 45px rgba(139,26,26,0.4);
+}
+.btn-crim:hover{background:var(--blood);box-shadow:0 0 70px rgba(139,26,26,0.6);}
+.buy-fine{
+  margin-top:2.5rem;
+  font-family:'Courier Prime',monospace;
+  font-size:0.63rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--bone);opacity:0.28;
+}
+
+/* === TEAM === */
+#team{
+  background:var(--deep);text-align:center;
+  border-top:1px solid rgba(184,169,154,0.06);
+}
+.team-name{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(2rem,5vw,4rem);
+  color:var(--bone);font-weight:400;opacity:0.45;margin-bottom:1rem;
+}
+.team-sub{
+  font-family:'IM Fell English',serif;font-style:italic;
+  font-size:1.08rem;color:var(--bone);opacity:0.38;
+}
+.team-roles{
+  margin-top:1.5rem;
+  font-family:'Courier Prime',monospace;
+  font-size:0.78rem;letter-spacing:0.12em;
+  color:var(--bone);opacity:0.32;
+}
+
+/* === FOOTER === */
+footer{
+  background:var(--black);
+  padding:2.8rem 5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(184,169,154,0.06);
+}
+.foot-copy{
+  font-family:'Courier Prime',monospace;
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--bone);opacity:0.22;
+}
+.foot-age{
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.4rem;color:var(--crimson);opacity:0.65;
+}
+
+/* === REVEAL ANIMATION === */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal.show{opacity:1;transform:translateY(0);}
+
+/* === RESPONSIVE === */
+@media(max-width:960px){
+  nav{padding:1.2rem 2rem;}
+  .nav-links{display:none;}
+  section{padding:5rem 2rem;}
+  #story{grid-template-columns:1fr;}
+  .feat-grid{grid-template-columns:1fr;}
+  .char-grid{grid-template-columns:1fr 1fr;}
+  #endings{grid-template-columns:1fr;}
+  .end-bad{border-right:none;border-bottom:1px solid rgba(107,21,21,0.22);}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- GRAIN -->
+<div id="grain"></div>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Napping Nightmare Productions</div>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#characters">Characters</a></li>
+    <li><a href="#acts">The Acts</a></li>
+    <li><a href="#buy">Get the Game</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-warning">&#9888; Mature Content &middot; 18+ &middot; Psychological Horror</div>
+    <h1 class="hero-title">WITHERED<br>AGAIN</h1>
+    <p class="hero-subtitle">A Napping Nightmare Production &nbsp;&middot;&nbsp; Virelow's Town, Est. 1898</p>
+    <p class="hero-tagline">&ldquo;I am waiting for you, my love. By the time you reach me&hellip; I will have been dead.&rdquo;</p>
+    <div class="hero-cta">
+      <a href="#buy" class="btn-buy-hero"><span>Buy Now</span></a>
+      <a href="#story" class="btn-ghost">Learn More</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story">
+  <div class="story-text reveal">
+    <div class="rule"></div>
+    <div class="eyebrow">The Story</div>
+    <h2 class="section-h">A Man Running<br>From Himself</h2>
+    <p><em>Kevin Mori</em> receives a letter from a woman he believed was gone. The handwriting is unmistakable. The words are impossible.</p>
+    <p>He drives six hours to a town he swore he&rsquo;d never return to &mdash; <em>Virelow&rsquo;s Town</em> &mdash; where every street holds a memory he buried, and every shadow knows his name.</p>
+    <div class="blockquote">
+      <p>&ldquo;I told myself I could leave whenever I wanted.&rdquo;</p>
+      <cite>&mdash; Kevin Mori, on arrival</cite>
+    </div>
+    <p>What follows is not a ghost story. It is a <em>reckoning</em>. A man forced to stand before everything he chose to forget &mdash; in a village that will not let him escape until he faces what he truly did.</p>
+  </div>
+  <div id="face-wrap">
+    <canvas id="face-canvas"></canvas>
+    <div class="face-vig"></div>
+  </div>
+</section>
+
+<!-- CONTENT WARNING -->
+<section id="warning">
+  <div class="eyebrow">Content Advisory</div>
+  <h2 class="section-h">This game is not for everyone.</h2>
+  <p class="warn-body">Withered Again deals with deeply difficult human experiences. Please know yourself before you play.</p>
+  <div class="warn-tags reveal">
+    <div class="warn-tag">Suicide &amp; Self-Harm</div>
+    <div class="warn-tag">Domestic Violence</div>
+    <div class="warn-tag">Child Loss &amp; Infant Death</div>
+    <div class="warn-tag">Psychological Horror</div>
+    <div class="warn-tag">Disturbing Imagery</div>
+    <div class="warn-tag">Animal Threat &amp; Chases</div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="reveal">
+    <div class="rule"></div>
+    <div class="eyebrow">The Experience</div>
+    <h2 class="section-h">What Awaits in<br>Virelow&rsquo;s Town</h2>
+  </div>
+  <div class="feat-grid reveal">
+    <div class="feat-card">
+      <div class="feat-num">01</div>
+      <div class="feat-title">A Living, Breathing Horror</div>
+      <p class="feat-desc">Virelow&rsquo;s Town breathes with you. Children play. Villagers repeat themselves. The world appears normal &mdash; until it doesn&rsquo;t. A slow descent into something deeply, wrongly familiar.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">02</div>
+      <div class="feat-title">The Shadow</div>
+      <p class="feat-desc">Silent. Patient. Inevitable. Not a monster &mdash; a manifestation of Kevin&rsquo;s own guilt. It never rushes. It never speaks. It simply knows where you&rsquo;re going, because it knows what you&rsquo;ve done.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">03</div>
+      <div class="feat-title">Memory Objects</div>
+      <p class="feat-desc">A hospital bracelet. A note reading &ldquo;If it&rsquo;s a girl &mdash; Grace &hearts;&rdquo;. An unsent letter found under the mattress. Each one is a wound. Each must be faced before you can leave.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">04</div>
+      <div class="feat-title">Two Endings. No Easy Answers.</div>
+      <p class="feat-desc">The path you choose in the final chase determines everything. Run from your guilt &mdash; or face it. Neither ending offers comfort. Only one offers truth.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">05</div>
+      <div class="feat-title">The Loop</div>
+      <p class="feat-desc">Streets fold back on themselves. Each return reveals something new: a bloodstain, a child&rsquo;s shoe, a photograph scratched beyond recognition. The village keeps score of everything.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-num">06</div>
+      <div class="feat-title">Atmospheric Sound Design</div>
+      <p class="feat-desc">During the final sequence, the village sounds play in reverse. Birdsong backwards. Children&rsquo;s laughter &mdash; twisted, collapsing. The beautiful morning, consumed and destroyed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section id="characters">
+  <div class="reveal">
+    <div class="rule"></div>
+    <div class="eyebrow">The People</div>
+    <h2 class="section-h">Those You Will<br>Not Forget</h2>
+  </div>
+  <div class="char-grid reveal">
+    <div class="char-card">
+      <div class="char-name">Kevin Mori</div>
+      <div class="char-role">The Player &middot; The Guilty</div>
+      <div class="char-line"></div>
+      <p class="char-desc">Japanese-American, from California. A man who made a choice he could not undo, and spent years running from it. He is not a villain. He is something worse: a man who loved the people he hurt.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-name">Vy Nguyen</div>
+      <div class="char-role">The Wife &middot; The Witness</div>
+      <div class="char-line"></div>
+      <p class="char-desc">Vietnamese, immigrated to California. Calm. Devastating. Quietly aware of everything. She wrote a hundred letters and threw them all away. The one she kept &mdash; Kevin finds under the mattress.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-name">Grace Mori</div>
+      <div class="char-role">The Daughter &middot; The Absence</div>
+      <div class="char-line"></div>
+      <p class="char-desc">The daughter Kevin and Vy never got to raise. Her name is written in a drawer. She never breathed. She is everywhere in Virelow&rsquo;s Town &mdash; in every silence, in every room left empty.</p>
+    </div>
+    <div class="char-card">
+      <div class="char-name">The Shadow</div>
+      <div class="char-role">The Manifestation &middot; The Reckoning</div>
+      <div class="char-line"></div>
+      <p class="char-desc">Silent. Patient. Inevitable. At the end, it raises one hand &mdash; not to threaten. To beckon. Come back. You know what you did. You know you have to face it eventually.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACTS -->
+<section id="acts">
+  <div class="acts-wrap">
+    <div class="reveal">
+      <div class="rule"></div>
+      <div class="eyebrow">Story Structure</div>
+      <h2 class="section-h">Seven Acts.<br>No Escape.</h2>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="act">
+        <div class="act-num">Act I</div>
+        <div class="act-title">The Arrival</div>
+        <p class="act-desc">A letter. A six-hour drive. A blown tire on the bridge into Virelow&rsquo;s Town. Kevin steps out and looks back at the collapsed bridge. Then he turns and faces the fog. There is no way out.</p>
+        <p class="act-quote">&ldquo;I lied to myself the whole drive here. Told myself I could leave whenever I wanted. I couldn&rsquo;t.&rdquo;</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act II</div>
+        <div class="act-title">The Living Village</div>
+        <p class="act-desc">The village appears normal. Children play. Laundry hangs on lines. Then a child turns and stares with empty eyes. At the far end of the road &mdash; Vy. Standing still among the moving crowd, smiling faintly. By the time Kevin reaches her: nobody.</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act III</div>
+        <div class="act-title">The Abandoned Village</div>
+        <p class="act-desc">Kevin opens his eyes. Same village. Completely empty. Doors hanging open. Blood stains but no bodies. Streets loop back on themselves, each return more changed than the last. The Shadow appears for the first time.</p>
+        <p class="act-quote">&ldquo;The silence was the worst part. I kept waiting to hear something. Anything.&rdquo;</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act IV</div>
+        <div class="act-title">The Memories</div>
+        <p class="act-desc">A hospital bracelet. A folded note. An unsent letter. A kitchen that holds a different kind of violence. Each object opens a flashback &mdash; no music, just truth. The Shadow patrols outside every room Kevin must enter to find them.</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act V</div>
+        <div class="act-title">Vy&rsquo;s Confrontation</div>
+        <p class="act-desc">Kevin finds the house. Vy stands in the center, calm and still. What follows is not a fight. It is the quietest devastation imaginable. She asks him to say one word he has been unable to speak for years.</p>
+        <p class="act-quote">&ldquo;Say her name.&rdquo; &mdash; Vy</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act VI</div>
+        <div class="act-title">The Final Chase</div>
+        <p class="act-desc">The village consumes itself. The Shadow expands like ink in water. The dogs close in from every side street. Kevin must choose: run toward the bridge, or run toward the water. One choice ends in escape. The other ends in truth.</p>
+      </div>
+      <div class="act">
+        <div class="act-num">Act VII</div>
+        <div class="act-title">The Endings</div>
+        <p class="act-desc">Two paths. Neither offers redemption. One offers escape &mdash; briefly. The other offers something rarer and harder: the ability to finally stop running. A prison visiting room. A small boy pressing his hand to the glass.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENDINGS -->
+<section id="endings">
+  <div class="end-card end-bad">
+    <div class="end-label">Bad Ending</div>
+    <h3 class="end-title">The Escape</h3>
+    <p class="end-text">Kevin runs for the bridge. The Shadow cannot cross the river. He makes it out &mdash; watches from the other side as it raises both hands. Not threatening. Beckoning. Come back. You know you have to.</p>
+    <p class="end-text">He doesn&rsquo;t go back.</p>
+    <p class="end-final">&ldquo;He took his own life in the house where it all ended. Nobody came looking. Nobody knew to.&rdquo;</p>
+  </div>
+  <div class="end-card end-good">
+    <div class="end-label">Good Ending</div>
+    <h3 class="end-title">Acceptance</h3>
+    <p class="end-text">Kevin runs to the water. The Shadow dissolves quietly &mdash; like fog burning off in morning light. A prison visiting room. An older, hollowed Kevin. A small boy named Daniel presses his hand to the glass.</p>
+    <p class="end-text">Kevin presses his back. He breaks.</p>
+    <p class="end-final">&ldquo;He confessed everything. That is not the same as being forgiven. It never is.&rdquo;</p>
+  </div>
+</section>
+
+<!-- BUY -->
+<section id="buy">
+  <canvas id="buy-canvas"></canvas>
+  <div class="buy-inner reveal">
+    <div class="eyebrow">Available Now</div>
+    <h2 class="section-h" style="margin-bottom:0">Withered Again</h2>
+    <div class="buy-price">$14.99</div>
+    <p class="buy-note">Single purchase &middot; Full game &middot; No microtransactions</p>
+    <div class="buy-btns">
+      <a href="#" class="btn-crim">Buy on itch.io</a>
+      <a href="#" class="btn-ghost" style="pointer-events:all;cursor:none;">Steam Wishlist</a>
+    </div>
+    <p class="buy-fine">18+ &middot; Windows / Mac &middot; Developed in Godot &middot; Original Score</p>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="reveal">
+    <p style="font-family:'Courier Prime',monospace;font-size:0.63rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--crimson);margin-bottom:1.4rem;">The Studio</p>
+    <div class="team-name">Napping Nightmare</div>
+    <p class="team-sub">All story elements, characters and locations are original property of Napping Nightmare.</p>
+    <p class="team-roles">Lead Developer &middot; Visual Director &middot; Animation &middot; Audio &middot; Voice Acting &mdash; Vy Nguyen</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-copy">&copy; 2025 Napping Nightmare &middot; All Rights Reserved</div>
+  <div class="foot-age">18+</div>
+  <div class="foot-copy">Virelow&rsquo;s Town, Est. 1898</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============================================================
+   CURSOR
+============================================================ */
+var curEl = document.getElementById('cur');
+var cur2El = document.getElementById('cur2');
+var curX = -100, curY = -100;
+var cur2X = -100, cur2Y = -100;
+
+document.addEventListener('mousemove', function(e) {
+  curX = e.clientX;
+  curY = e.clientY;
+  curEl.style.left = curX + 'px';
+  curEl.style.top  = curY + 'px';
+});
+
+function animateCursor() {
+  cur2X += (curX - cur2X) * 0.18;
+  cur2Y += (curY - cur2Y) * 0.18;
+  cur2El.style.left = cur2X + 'px';
+  cur2El.style.top  = cur2Y + 'px';
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+document.querySelectorAll('a, button, .char-card, .feat-card').forEach(function(el) {
+  el.addEventListener('mouseenter', function() { curEl.classList.add('big'); cur2El.classList.add('big'); });
+  el.addEventListener('mouseleave', function() { curEl.classList.remove('big'); cur2El.classList.remove('big'); });
+});
+
+/* ============================================================
+   HERO — THREE.JS SKULL FACE + PARTICLES
+============================================================ */
+(function() {
+  var canvas = document.getElementById('hero-canvas');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x050404, 1);
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x050404, 0.022);
+
+  var camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 13);
+
+  function onResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+  onResize();
+  window.addEventListener('resize', onResize);
+
+  // Lights
+  scene.add(new THREE.AmbientLight(0x120606, 3));
+  var redLight = new THREE.PointLight(0x8b1a1a, 10, 38);
+  redLight.position.set(0, 2, 6);
+  scene.add(redLight);
+  var rimLight = new THREE.PointLight(0x3a0808, 4, 22);
+  rimLight.position.set(-5, -3, 3);
+  scene.add(rimLight);
+  var coldLight = new THREE.PointLight(0x060612, 2, 14);
+  coldLight.position.set(4, 4, 2);
+  scene.add(coldLight);
+
+  // Materials
+  var skinMat = new THREE.MeshStandardMaterial({ color: 0x1c1410, roughness: 0.92, metalness: 0, emissive: 0x0d0504, emissiveIntensity: 0.4 });
+  var darkMat = new THREE.MeshStandardMaterial({ color: 0x060202, roughness: 1, metalness: 0 });
+  var eyeMat  = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x6b0000, emissiveIntensity: 4.5, roughness: 0, metalness: 0.1 });
+  var teethMat = new THREE.MeshStandardMaterial({ color: 0x8a7e70, roughness: 0.7 });
+  var crackMat = new THREE.LineBasicMaterial({ color: 0x4a0808 });
+
+  var faceGroup = new THREE.Group();
+  scene.add(faceGroup);
+
+  // HEAD
+  var hg = new THREE.SphereGeometry(2.4, 32, 32);
+  hg.scale(1, 1.18, 0.88);
+  faceGroup.add(new THREE.Mesh(hg, skinMat));
+
+  // FOREHEAD BUMP
+  var fg2 = new THREE.SphereGeometry(1.8, 24, 24);
+  fg2.scale(1, 0.48, 0.65);
+  var forehead = new THREE.Mesh(fg2, skinMat);
+  forehead.position.set(0, 1.85, 0.55);
+  faceGroup.add(forehead);
+
+  // CHEEKBONES
+  var cheekData = [[-1, 0], [1, 0]];
+  for (var ci = 0; ci < cheekData.length; ci++) {
+    var s = cheekData[ci][0];
+    var cg = new THREE.SphereGeometry(0.9, 16, 16);
+    cg.scale(1.35, 0.65, 0.75);
+    var cheek = new THREE.Mesh(cg, skinMat);
+    cheek.position.set(s * 1.65, 0.3, 0.85);
+    faceGroup.add(cheek);
+  }
+
+  // JAW
+  var jg = new THREE.SphereGeometry(1.55, 24, 24);
+  jg.scale(0.82, 0.88, 0.72);
+  var jaw = new THREE.Mesh(jg, skinMat);
+  jaw.position.set(0, -1.6, 0);
+  faceGroup.add(jaw);
+
+  // CHIN
+  var chg = new THREE.SphereGeometry(0.58, 14, 14);
+  chg.scale(0.78, 0.68, 0.68);
+  var chin = new THREE.Mesh(chg, skinMat);
+  chin.position.set(0.1, -2.52, 0.22);
+  faceGroup.add(chin);
+
+  // EYE SOCKETS + GLOWING EYES
+  var eyeXData = [-0.9, 0.9];
+  for (var ei = 0; ei < eyeXData.length; ei++) {
+    var ex = eyeXData[ei];
+
+    var sockG = new THREE.SphereGeometry(0.6, 20, 20);
+    var sock = new THREE.Mesh(sockG, darkMat);
+    sock.position.set(ex, 0.58, 1.52);
+    sock.scale.set(1.45, 1.0, 0.45);
+    faceGroup.add(sock);
+
+    var eyeG = new THREE.SphereGeometry(0.28, 16, 16);
+    var eye = new THREE.Mesh(eyeG, eyeMat);
+    eye.position.set(ex, 0.58, 1.65);
+    eye.scale.set(1.35, 0.95, 0.42);
+    faceGroup.add(eye);
+
+    var slitG = new THREE.SphereGeometry(0.09, 8, 8);
+    var slit = new THREE.Mesh(slitG, darkMat);
+    slit.position.set(ex, 0.58, 1.8);
+    slit.scale.set(0.35, 1.85, 0.18);
+    faceGroup.add(slit);
+
+    var browG = new THREE.SphereGeometry(0.7, 16, 12);
+    browG.scale(1.5, 0.32, 0.48);
+    var brow = new THREE.Mesh(browG, skinMat);
+    brow.position.set(ex, 1.12, 1.55);
+    faceGroup.add(brow);
+  }
+
+  // NOSE
+  var ng = new THREE.SphereGeometry(0.36, 12, 12);
+  ng.scale(0.8, 0.58, 0.38);
+  var noseMesh = new THREE.Mesh(ng, darkMat);
+  noseMesh.position.set(0, -0.18, 1.88);
+  faceGroup.add(noseMesh);
+
+  var nbg = new THREE.CylinderGeometry(0.07, 0.11, 0.78, 8);
+  var noseBridge = new THREE.Mesh(nbg, skinMat);
+  noseBridge.position.set(0, 0.25, 1.92);
+  noseBridge.rotation.x = 0.12;
+  faceGroup.add(noseBridge);
+
+  // MOUTH
+  var mg = new THREE.SphereGeometry(0.68, 20, 12);
+  mg.scale(1.9, 0.52, 0.48);
+  var mouth = new THREE.Mesh(mg, darkMat);
+  mouth.position.set(0.1, -1.05, 1.78);
+  faceGroup.add(mouth);
+
+  // TEETH
+  var teethX = [-0.5, -0.22, 0.06, 0.34, 0.58];
+  for (var ti = 0; ti < teethX.length; ti++) {
+    var tx = teethX[ti];
+    var tg = new THREE.BoxGeometry(0.1, 0.2 + Math.random() * 0.1, 0.07);
+    var tooth = new THREE.Mesh(tg, teethMat);
+    tooth.position.set(tx, -0.95 + (ti % 2) * 0.06, 1.9);
+    tooth.rotation.z = (Math.random() - 0.5) * 0.38;
+    faceGroup.add(tooth);
+  }
+
+  // CRACK LINES
+  var crackPts1 = [new THREE.Vector3(0.3, 1.7, 2.1), new THREE.Vector3(0.55, 0.8, 2.05), new THREE.Vector3(0.45, 0.1, 2.0)];
+  var crackPts2 = [new THREE.Vector3(-0.15, 0.1, 2.1), new THREE.Vector3(-0.48, -0.7, 1.98)];
+  var crackPts3 = [new THREE.Vector3(0.8, 0.5, 2.0), new THREE.Vector3(1.05, -0.25, 1.88)];
+  [crackPts1, crackPts2, crackPts3].forEach(function(pts) {
+    faceGroup.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), crackMat));
+  });
+
+  faceGroup.position.set(0, 0.5, 0);
+
+  // PARTICLES
+  var N = 3000;
+  var partGeo = new THREE.BufferGeometry();
+  var partPos = new Float32Array(N * 3);
+  for (var pi = 0; pi < N; pi++) {
+    partPos[pi * 3]     = (Math.random() - 0.5) * 90;
+    partPos[pi * 3 + 1] = (Math.random() - 0.5) * 90;
+    partPos[pi * 3 + 2] = (Math.random() - 0.5) * 60;
+  }
+  partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
+  var partMat = new THREE.PointsMaterial({ color: 0x3a2c22, size: 0.14, transparent: true, opacity: 0.55, sizeAttenuation: true, depthWrite: false });
+  scene.add(new THREE.Points(partGeo, partMat));
+
+  // BACKGROUND CROSS MARKERS
+  var crosses = [];
+  var crossLineMat = new THREE.LineBasicMaterial({ color: 0x150a0a });
+  for (var xi = 0; xi < 14; xi++) {
+    var g = new THREE.Group();
+    var s = Math.random() * 1.8 + 0.4;
+    var h1 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-s, 0, 0), new THREE.Vector3(s, 0, 0)]);
+    var v1 = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -s, 0), new THREE.Vector3(0, s, 0)]);
+    g.add(new THREE.Line(h1, crossLineMat));
+    g.add(new THREE.Line(v1, crossLineMat));
+    g.position.set(
+      (Math.random() - 0.5) * 35,
+      (Math.random() - 0.5) * 25,
+      (Math.random() - 0.5) * 12 - 8
+    );
+    scene.add(g);
+    crosses.push(g);
+  }
+
+  // MOUSE FOLLOW
+  var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+  document.addEventListener('mousemove', function(e) {
+    targetX = (e.clientX / window.innerWidth - 0.5) * 0.9;
+    targetY = -(e.clientY / window.innerHeight - 0.5) * 0.7;
+  });
+
+  var t = 0;
+  function heroLoop() {
+    requestAnimationFrame(heroLoop);
+    t += 0.008;
+
+    currentX += (targetX - currentX) * 0.045;
+    currentY += (targetY - currentY) * 0.045;
+
+    faceGroup.rotation.y = currentX * 0.45;
+    faceGroup.rotation.x = currentY * 0.32;
+    faceGroup.position.y = 0.5 + Math.sin(t * 0.68) * 0.09;
+    faceGroup.position.z = Math.sin(t * 0.42) * 0.18;
+
+    eyeMat.emissiveIntensity = 3.5 + Math.sin(t * 2.3) * 1.5 + Math.sin(t * 4.1) * 0.5;
+    redLight.intensity = 8 + Math.sin(t * 1.4) * 2.5 + Math.sin(t * 5.2) * 0.6;
+    redLight.position.x = Math.sin(t * 0.55) * 2.2;
+    redLight.position.y = 2 + Math.sin(t * 0.85) * 1.2;
+
+    for (var pi = 0; pi < N; pi++) {
+      partPos[pi * 3 + 1] += 0.004;
+      partPos[pi * 3]     += Math.sin(t + pi * 0.1) * 0.001;
+      if (partPos[pi * 3 + 1] > 45) partPos[pi * 3 + 1] = -45;
+    }
+    partGeo.attributes.position.needsUpdate = true;
+
+    for (var ci = 0; ci < crosses.length; ci++) {
+      crosses[ci].rotation.z += 0.001 * (ci % 2 === 0 ? 1 : -1);
+    }
+
+    renderer.render(scene, camera);
+  }
+  heroLoop();
+})();
+
+/* ============================================================
+   STORY PANEL — SHADOW FIGURE
+============================================================ */
+(function() {
+  var canvas = document.getElementById('face-canvas');
+  var wrap   = document.getElementById('face-wrap');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+  camera.position.set(0, 0, 9);
+
+  function onResize2() {
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  onResize2();
+  window.addEventListener('resize', onResize2);
+
+  scene.add(new THREE.AmbientLight(0x0a0404, 3));
+  var bl = new THREE.PointLight(0x6b0000, 12, 24);
+  bl.position.set(2, 1, 5);
+  scene.add(bl);
+  var cl = new THREE.PointLight(0x050510, 5, 14);
+  cl.position.set(-3, 2, 2);
+  scene.add(cl);
+
+  var shadowMat = new THREE.MeshStandardMaterial({ color: 0x010101, roughness: 1, metalness: 0, transparent: true, opacity: 0.95 });
+  var auraMat   = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x4a0000, emissiveIntensity: 2.5, transparent: true, opacity: 0.55 });
+
+  var shadowGroup = new THREE.Group();
+  scene.add(shadowGroup);
+
+  // BODY
+  shadowGroup.add(new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.85, 4.2, 14), shadowMat));
+
+  // HEAD
+  var shg = new THREE.SphereGeometry(0.88, 22, 22);
+  shg.scale(0.88, 1.25, 0.82);
+  var shadowHead = new THREE.Mesh(shg, shadowMat);
+  shadowHead.position.set(0.18, 2.85, 0);
+  shadowGroup.add(shadowHead);
+
+  // ARMS
+  var rArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.07, 2.6, 8), shadowMat);
+  rArm.position.set(1.25, 1.1, 0);
+  rArm.rotation.z = -0.75;
+  shadowGroup.add(rArm);
+
+  var lArm = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.07, 2.3, 8), shadowMat);
+  lArm.position.set(-1.15, 0.75, 0);
+  lArm.rotation.z = 0.42;
+  shadowGroup.add(lArm);
+
+  // AURA
+  var auraG = new THREE.SphereGeometry(2.4, 20, 20);
+  auraG.scale(0.88, 1.6, 0.45);
+  var aura = new THREE.Mesh(auraG, auraMat);
+  aura.position.set(0, 0.8, 0);
+  shadowGroup.add(aura);
+
+  // TENDRILS
+  for (var ti = 0; ti < 8; ti++) {
+    var angle = (ti / 8) * Math.PI * 2;
+    var tendril = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0, 1.6, 4), shadowMat);
+    tendril.position.set(Math.cos(angle) * 1.6, -1.2 + ti * 0.25, Math.sin(angle) * 0.5);
+    tendril.rotation.z = angle;
+    shadowGroup.add(tendril);
+  }
+
+  shadowGroup.position.set(0, -0.5, 0);
+
+  // PARTICLES
+  var spg = new THREE.BufferGeometry();
+  var spp = new Float32Array(500 * 3);
+  for (var spi = 0; spi < 500; spi++) {
+    spp[spi * 3]     = (Math.random() - 0.5) * 12;
+    spp[spi * 3 + 1] = (Math.random() - 0.5) * 12;
+    spp[spi * 3 + 2] = (Math.random() - 0.5) * 4;
+  }
+  spg.setAttribute('position', new THREE.BufferAttribute(spp, 3));
+  scene.add(new THREE.Points(spg, new THREE.PointsMaterial({ color: 0x200808, size: 0.07, transparent: true, opacity: 0.8 })));
+
+  var t2 = 0;
+  function shadowLoop() {
+    requestAnimationFrame(shadowLoop);
+    t2 += 0.01;
+    shadowHead.rotation.z = Math.sin(t2 * 0.52) * 0.09;
+    shadowHead.position.x = 0.18 + Math.sin(t2 * 0.31) * 0.06;
+    shadowGroup.position.y = -0.5 + Math.sin(t2 * 0.42) * 0.13;
+    auraMat.emissiveIntensity = 2 + Math.sin(t2 * 1.6) * 0.9;
+    bl.intensity = 10 + Math.sin(t2 * 2.2) * 3.5;
+    rArm.rotation.z = -0.75 + Math.sin(t2 * 0.65) * 0.18;
+    renderer.render(scene, camera);
+  }
+  shadowLoop();
+})();
+
+/* ============================================================
+   BUY SECTION — BLOOD VORTEX
+============================================================ */
+(function() {
+  var canvas = document.getElementById('buy-canvas');
+  var section = document.getElementById('buy');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x050404, 1);
+
+  var scene  = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(60, 2, 0.1, 100);
+  camera.position.z = 11;
+
+  function onResize3() {
+    var w = section.clientWidth, h = section.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  onResize3();
+  window.addEventListener('resize', onResize3);
+
+  scene.add(new THREE.AmbientLight(0x050202, 2));
+  var vpl = new THREE.PointLight(0x8b1a1a, 6, 35);
+  vpl.position.set(0, 0, 6);
+  scene.add(vpl);
+
+  var M = 2500;
+  var vGeo  = new THREE.BufferGeometry();
+  var vPos  = new Float32Array(M * 3);
+  var vCol  = new Float32Array(M * 3);
+  var vRad  = new Float32Array(M);
+  var vSpd  = new Float32Array(M);
+  var vTheta = new Float32Array(M);
+
+  for (var vi = 0; vi < M; vi++) {
+    vRad[vi]   = Math.random() * 9 + 1.5;
+    vSpd[vi]   = Math.random() * 0.5 + 0.5;
+    vTheta[vi] = Math.random() * Math.PI * 2;
+    var h = (Math.random() - 0.5) * 12;
+    vPos[vi * 3]     = Math.cos(vTheta[vi]) * vRad[vi];
+    vPos[vi * 3 + 1] = h;
+    vPos[vi * 3 + 2] = Math.sin(vTheta[vi]) * vRad[vi];
+    var shade = Math.random();
+    vCol[vi * 3]     = 0.38 + shade * 0.25;
+    vCol[vi * 3 + 1] = 0.04 + shade * 0.04;
+    vCol[vi * 3 + 2] = 0.04 + shade * 0.04;
+  }
+  vGeo.setAttribute('position', new THREE.BufferAttribute(vPos, 3));
+  vGeo.setAttribute('color',    new THREE.BufferAttribute(vCol, 3));
+  var vortex = new THREE.Points(vGeo, new THREE.PointsMaterial({ vertexColors: true, size: 0.09, transparent: true, opacity: 0.78, sizeAttenuation: true, depthWrite: false }));
+  scene.add(vortex);
+
+  var coreMat = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0x3a0000, emissiveIntensity: 1.5, roughness: 1 });
+  var core = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 24), coreMat);
+  scene.add(core);
+
+  var tv = 0;
+  function vortexLoop() {
+    requestAnimationFrame(vortexLoop);
+    tv += 0.004;
+
+    for (var vi = 0; vi < M; vi++) {
+      var a = vTheta[vi] + tv * vSpd[vi];
+      vPos[vi * 3]     = Math.cos(a) * vRad[vi];
+      vPos[vi * 3 + 2] = Math.sin(a) * vRad[vi];
+      vPos[vi * 3 + 1] += 0.005;
+      if (vPos[vi * 3 + 1] > 6) vPos[vi * 3 + 1] = -6;
+    }
+    vGeo.attributes.position.needsUpdate = true;
+    vortex.rotation.x = Math.sin(tv * 0.3) * 0.08;
+    vpl.intensity = 5 + Math.sin(tv * 2.1) * 2.5;
+    coreMat.emissiveIntensity = 1.2 + Math.sin(tv * 1.5) * 0.6;
+    renderer.render(scene, camera);
+  }
+  vortexLoop();
+})();
+
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('show');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(function(el) {
+  revealObs.observe(el);
+});
+
+/* ============================================================
+   ACTS TIMELINE — STAGGERED REVEAL
+============================================================ */
+var timelineEl = document.getElementById('timeline');
+var actsObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      var items = e.target.querySelectorAll('.act');
+      items.forEach(function(item, i) {
+        setTimeout(function() {
+          item.classList.add('show');
+        }, i * 220);
+      });
+      actsObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.05 });
+
+actsObs.observe(timelineEl);
+</script>
+</body>
+</html>
